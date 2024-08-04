@@ -1,0 +1,35 @@
+services:
+  python:
+    restart: no
+    build: ./api/
+    container_name: "api"
+    working_dir: "/root/"
+    tty: true
+    volumes:
+      - ./api:/root/api
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    networks:
+      - network1
+
+  db:
+    build: ./mysql/
+    volumes:
+      - ./mysql/initdb.d:/docker-entrypoint-initdb.d #初期処理のフォルダ。初回起動のみでおｋ
+      - ./mysql/db:/var/lib/mysql #ここにデータ永続化するためのファイルが入る。
+    image: mysqlapp
+    container_name: "bridgeAppDb"
+    environment:
+      - MYSQL_ROOT_PASSWORD=pass
+    ports:
+      - 3306:3306
+    networks:
+      - network1
+
+volumes:
+  node_modules:
+
+networks:
+  network1:

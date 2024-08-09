@@ -1,8 +1,18 @@
 import os
 import uuid
 import re
+from collections import namedtuple
+from generate import board
 
 def format_content(content):
+  """_summary_
+
+  Args:
+      content (_type_): _description_
+
+  Returns:
+      _type_: _description_
+  """
   return re.sub("'", "", content)
 
 def parse_match_info(content):
@@ -53,8 +63,15 @@ def parse_player_info(content):
       south_close: str
     )
   """
-  players = re.search('(?<=pn\|)(.+?)(?=\|pg)', content)
-  return tuple(players.group(0).split(','))
+  if players := re.search('(?<=pn\|)(.+?)(?=\|pg)', content):
+    return players.group()
+
+def generate_board_datum(board):
+  datum = namedtuple('Datum', ['room', 'board_num', 'auction', 'play', 'tricks', 'hand'])
+  datum.__new__.__defaults__ = ('', '', '', '', '', '')
+  if room := re.search('(?<=qx\|)(.+?)(?=\|)', board):
+    datum.room = room.group()
+  return datum.room
 
 dir_path = '../sample/'
 files = os.listdir(dir_path)
@@ -64,5 +81,3 @@ for file in files:
     content = f.read()
     formated_content = format_content(content)
     # uuid = uuid.uuid4()
-
-    print(parse_player_info(content))

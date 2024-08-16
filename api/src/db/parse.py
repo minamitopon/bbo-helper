@@ -81,3 +81,5 @@ for file in files:
     content = f.read()
     formated_content = format_content(content)
     # uuid = uuid.uuid4()
+
+    print(board.auction(content))

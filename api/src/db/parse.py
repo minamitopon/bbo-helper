@@ -13,7 +13,7 @@ def format_content(content):
   Returns:
       _type_: _description_
   """
-  return re.sub("'", "", content)
+  return re.sub('\n|\r\n|\r', "", content)
 
 def parse_match_info(content):
   """
@@ -82,4 +82,6 @@ for file in files:
     formated_content = format_content(content)
     # uuid = uuid.uuid4()
 
-    print(board.auction(content))
+    # 1ボード単位の情報
+    for board_info in re.findall('qx\|.+?(?=qx|$)', formated_content):
+      print(board.generate_board_record(board_info))

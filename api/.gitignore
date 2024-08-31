@@ -1,1 +1,3 @@
-/src/files
+/src/files/
+/src/sample/
+**/__pycache__/**
